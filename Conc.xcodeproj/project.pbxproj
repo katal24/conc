@@ -12,6 +12,7 @@
 		ACC6E3CE201098DB00471898 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACC6E3CC201098DB00471898 /* Main.storyboard */; };
 		ACC6E3D0201098DB00471898 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACC6E3CF201098DB00471898 /* Assets.xcassets */; };
 		ACC6E3D3201098DB00471898 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACC6E3D1201098DB00471898 /* LaunchScreen.storyboard */; };
+		ACC6E3DB2010B06500471898 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = ACC6E3DA2010B06500471898 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		ACC6E3CF201098DB00471898 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ACC6E3D2201098DB00471898 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ACC6E3D4201098DB00471898 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ACC6E3DA2010B06500471898 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +40,7 @@
 		ACC6E3BC201098DA00471898 = {
 			isa = PBXGroup;
 			children = (
+				ACC6E3DA2010B06500471898 /* Default-568h@2x.png */,
 				ACC6E3C7201098DB00471898 /* conc */,
 				ACC6E3C6201098DB00471898 /* Products */,
 			);
@@ -100,7 +103,7 @@
 					};
 				};
 			};
-			buildConfigurationList = ACC6E3C0201098DA00471898 /* Build configuration list for PBXProject "conc" */;
+			buildConfigurationList = ACC6E3C0201098DA00471898 /* Build configuration list for PBXProject "Conc" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -124,6 +127,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACC6E3D3201098DB00471898 /* LaunchScreen.storyboard in Resources */,
+				ACC6E3DB2010B06500471898 /* Default-568h@2x.png in Resources */,
 				ACC6E3D0201098DB00471898 /* Assets.xcassets in Resources */,
 				ACC6E3CE201098DB00471898 /* Main.storyboard in Resources */,
 			);
@@ -281,7 +285,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		ACC6E3C0201098DA00471898 /* Build configuration list for PBXProject "conc" */ = {
+		ACC6E3C0201098DA00471898 /* Build configuration list for PBXProject "Conc" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				ACC6E3D5201098DB00471898 /* Debug */,

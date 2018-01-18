@@ -17,7 +17,7 @@
                BlueprintIdentifier = "ACC6E3C4201098DB00471898"
                BuildableName = "conc.app"
                BlueprintName = "conc"
-               ReferencedContainer = "container:conc.xcodeproj">
+               ReferencedContainer = "container:Conc.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
             BlueprintIdentifier = "ACC6E3C4201098DB00471898"
             BuildableName = "conc.app"
             BlueprintName = "conc"
-            ReferencedContainer = "container:conc.xcodeproj">
+            ReferencedContainer = "container:Conc.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -58,7 +58,7 @@
             BlueprintIdentifier = "ACC6E3C4201098DB00471898"
             BuildableName = "conc.app"
             BlueprintName = "conc"
-            ReferencedContainer = "container:conc.xcodeproj">
+            ReferencedContainer = "container:Conc.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -77,7 +77,7 @@
             BlueprintIdentifier = "ACC6E3C4201098DB00471898"
             BuildableName = "conc.app"
             BlueprintName = "conc"
-            ReferencedContainer = "container:conc.xcodeproj">
+            ReferencedContainer = "container:Conc.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
