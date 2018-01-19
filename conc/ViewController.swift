@@ -15,27 +15,33 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
 //    }
 
     
-    @IBOutlet weak var image: UIImageView!
+//    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var imagesTableView: UITableView!
     
     var downloadTask: URLSessionDownloadTask!
     var backgroundSession: URLSession!
     
+    let urls : [String] = [
+    "https://upload.wikimedia.org/wikipedia/commons/0/04/Dyck,_Anthony_van_-_Family_Portrait.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/ce/Petrus_Christus_-_Portrait_of_a_Young_Woman_-_Google_Art_Project.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/3/36/Quentin_Matsys_-_A_Grotesque_old_woman.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/c8/Valmy_Battle_painting.jpg"
+    ];
+    
 //    let urls : [String] = [
-//        "http://www.mindsandvines.com/wp-content/uploads/2016/06/coloring_pictures_cats.jpg",
-//        "https://upload.wikimedia.org/wikipedia/commons/0/04/Dyck,_Anthony_van_-_Family_Portrait.jpg",
-//        "https://upload.wikimedia.org/wikipedia/commons/3/36/Quentin_Matsys_-_A_Grotesque_old_woman.jpg",
-//        "https://upload.wikimedia.org/wikipedia/commons/c/c8/Valmy_Battle_painting.jpg"
+//        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg",
+//        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg",
+//        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg",
+//        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg"
 //    ]
     
-    let urls : [String] = [
-        "http://www.mindsandvines.com/wp-content/uploads/2016/06/coloring_pictures_cats.jpg",
-        "http://www.mindsandvines.com/wp-content/uploads/2016/06/coloring_pictures_cats.jpg",
-        "http://www.mindsandvines.com/wp-content/uploads/2016/06/coloring_pictures_cats.jpg",
-        "http://www.mindsandvines.com/wp-content/uploads/2016/06/coloring_pictures_cats.jpg"
+    let names : [String] = [
+        "Family_Portrait",
+        "Google_Art_Project",
+        "A_Grotesque_old_woman",
+        "Valmy_Battle_painting"
     ]
-    
-    let names : [String] = ["Kot", "Family",  "Woman", "Battle"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,10 +122,13 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
                 print("An error occurred while moving file to destination url")
             }
         }
-        let imagePath: UIImage = UIImage(named: paths)!
-        let imageView = UIImageView(image: imagePath);
-        imageView.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
-        image.addSubview(imageView)
+       // let imagePath: UIImage = UIImage(named: paths)!
+       // let imageView1 = UIImageView(image: imagePath);
+        imageView.image = UIImage(contentsOfFile: paths)!
+        detectFaces();
+        
+       // imageView.frame = CGRect(x: 300, y: 600, width: 80, height: 100)
+       // imageView.addSubview(imageView1)
      }
     // 2
 
@@ -171,7 +180,19 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
 //        }
 //    }
 
+    @IBAction func detectFaceClicked(_ sender: Any) {
+        detectFaces();
+    }
 
+    func detectFaces() {
+        print(imageView.image?.accessibilityIdentifier)
+        let faceImage = CIImage(image: imageView.image!)
+        let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
+        let faces = faceDetector?.features(in: faceImage!) as! [CIFaceFeature]
+        print("Number of faces: \(faces.count)")
+    }
+    
+    
     
 }
 
