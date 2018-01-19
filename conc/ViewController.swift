@@ -41,11 +41,11 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
     
     var progress : [Int] = [0,0,0,0]
     var halfFlag = [true, true, true, true];
+    var firstDate = NSDate();
+    var secondDate = NSDate();
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
-       // imageView.isHidden = true;
         
         let backgroundSessionConfiguration = URLSessionConfiguration.background(withIdentifier: "backgroundSession");
         
@@ -64,7 +64,7 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         let cell: UITableViewCell = imagesTableView.dequeueReusableCell(withIdentifier: "imageCell") as UITableViewCell!;
         
         cell.textLabel?.text = names[indexPath.row];
-        cell.detailTextLabel?.text = "Progress \(progress[indexPath.row]) %";
+        cell.detailTextLabel?.text = "\(NSDate().timeIntervalSince(firstDate as Date)) Progress \(progress[indexPath.row]) %";
         return cell
     }
     
@@ -73,11 +73,14 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
     }
     
     func startDownload() {
+        
         var url1:URL;
         for (index, url) in urls.enumerated() {
             url1 = URL(string: url)!
-            
-            print("start downloading file \(index)");
+            if(index == 0) {
+             firstDate = NSDate();
+            }
+            print("\(NSDate().timeIntervalSince(firstDate as Date)) start downloading file \(index)");
             
             downloadTask = backgroundSession.downloadTask(with: url1)
             downloadTask.resume()
@@ -91,7 +94,7 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         
         let urlString = (downloadTask.originalRequest?.url?.absoluteString)!
         let numberOfFile = urls.index(of: urlString)!
-        print("Finished downloading of file: \(numberOfFile+1)")
+        print("\(NSDate().timeIntervalSince(firstDate as Date)) Finished downloading of file: \(numberOfFile+1)")
 
         let fileManager = FileManager()
 
@@ -104,17 +107,17 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         let destinationURLForFile = URL(fileURLWithPath: path)
         
         if fileManager.fileExists(atPath: destinationURLForFile.path){
-            print("File \(numberOfFile+1) exists in destination url");
+            print("\(NSDate().timeIntervalSince(firstDate as Date)) File \(numberOfFile+1) exists in destination url");
         }
         else{
             do {
                 try fileManager.moveItem(at: location, to: destinationURLForFile)
                 // file moved
-                print("Finished moving of file: \(numberOfFile+1)");
+                print("\(NSDate().timeIntervalSince(firstDate as Date)) Finished moving of file: \(numberOfFile+1)");
                 progress[numberOfFile] = 100;
                 imagesTableView.reloadData()
             }catch{
-                print("An error occurred while moving file to destination url")
+                print("\(NSDate().timeIntervalSince(firstDate as Date)) An error occurred while moving file to destination url")
             }
         }
         
@@ -147,7 +150,7 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         
         if(halfFlag[numberOfFile] && progress[numberOfFile] >= 50){
             halfFlag[numberOfFile] = false;
-            print("50% downloading of file \(numberOfFile+1)")
+            print("\(NSDate().timeIntervalSince(firstDate as Date)) 50% downloading of file \(numberOfFile+1)")
         }
 
         imagesTableView.reloadData()
@@ -155,13 +158,13 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
     
 
     func detectFaces(numberOfFile: Int, uImage: UIImage) {
-        print("started face detection of file \(numberOfFile+1)")
+        print("\(NSDate().timeIntervalSince(firstDate as Date)) started face detection of file \(numberOfFile+1)")
        
         let faceImage = CIImage(image: uImage)
         let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
         let faces = faceDetector?.features(in: faceImage!) as! [CIFaceFeature]
         
-        print("Finished face detection of file \(numberOfFile+1). Number of faces: \(faces.count) ")
+        print("\(NSDate().timeIntervalSince(firstDate as Date)) Finished face detection of file \(numberOfFile+1). Number of faces: \(faces.count) ")
     }
     
 }
