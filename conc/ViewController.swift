@@ -22,19 +22,28 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
     var downloadTask: URLSessionDownloadTask!
     var backgroundSession: URLSession!
     
-    let urls : [String] = [
-    "https://upload.wikimedia.org/wikipedia/commons/0/04/Dyck,_Anthony_van_-_Family_Portrait.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/c/ce/Petrus_Christus_-_Portrait_of_a_Young_Woman_-_Google_Art_Project.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/3/36/Quentin_Matsys_-_A_Grotesque_old_woman.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/c/c8/Valmy_Battle_painting.jpg"
-    ];
+    @IBAction func stopDownload(_ sender: Any) {
+//        downloadTask.cancel();
+        downloadTask?.cancel();
+   }
     
 //    let urls : [String] = [
-//        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg",
-//        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg",
-//        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg",
-//        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg"
-//    ]
+//    "https://upload.wikimedia.org/wikipedia/commons/0/04/Dyck,_Anthony_van_-_Family_Portrait.jpg",
+//    "https://upload.wikimedia.org/wikipedia/commons/c/ce/Petrus_Christus_-_Portrait_of_a_Young_Woman_-_Google_Art_Project.jpg",
+//    "https://upload.wikimedia.org/wikipedia/commons/3/36/Quentin_Matsys_-_A_Grotesque_old_woman.jpg",
+//    "https://upload.wikimedia.org/wikipedia/commons/c/c8/Valmy_Battle_painting.jpg"
+//    ];
+    
+//    let urls : [String] = [
+//        "https://upload.wikimedia.org/wikipedia/commons/0/04/Dyck,_Anthony_van_-_Family_Portrait.jpg"
+//    ];
+//    
+    let urls : [String] = [
+        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg",
+        "https://assets1.cdn-mw.com/mw/images/article/art-global-footer-recirc/personage-2338-0c870fcce7dc9a616a70597b63276f4f@1x.jpg",
+        "http://www.therecord.com.au/wp-content/uploads/2012/08/family-photo-2005-10-1024x682.jpg",
+        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg"
+    ]
     
     let names : [String] = [
         "Family_Portrait",
@@ -42,6 +51,14 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         "A_Grotesque_old_woman",
         "Valmy_Battle_painting"
     ]
+    
+        var progress : [Int] = [
+            0,0,0,0
+        ]
+    
+//    let names : [String] = [
+//        "Family_Portrait"
+//    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +84,7 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         let cell: UITableViewCell = imagesTableView.dequeueReusableCell(withIdentifier: "imageCell") as UITableViewCell!;
         
         cell.textLabel?.text = names[indexPath.row];
-        cell.detailTextLabel?.text = "Progress";
+        cell.detailTextLabel?.text = "Progress \(progress[indexPath.row]) %";
         return cell
     }
     
@@ -78,11 +95,12 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
     }
     
     func startDownload() {
-        print("start");
-        var url1:URL;
-        for url in urls {
+                var url1:URL;
+        for (index, url) in urls.enumerated() {
             url1 = URL(string: url)!
             downloadTask = backgroundSession.downloadTask(with: url1)
+            print("start downloading file \(index)");
+
             downloadTask.resume()
         }
 
@@ -125,7 +143,14 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
        // let imagePath: UIImage = UIImage(named: paths)!
        // let imageView1 = UIImageView(image: imagePath);
         imageView.image = UIImage(contentsOfFile: paths)!
-        detectFaces();
+        
+        let nazwese = (downloadTask.originalRequest?.url?.absoluteString)!
+        
+        let numberOfFile = urls.index(of: nazwese)!
+        
+        print("Finished downloading of file: \(numberOfFile+1)")
+        
+        detectFaces(numberOfFile: numberOfFile);
         
        // imageView.frame = CGRect(x: 300, y: 600, width: 80, height: 100)
        // imageView.addSubview(imageView1)
@@ -144,6 +169,8 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         }
     }
     
+    var counter = 0;
+    
     func urlSession(_ session: URLSession,
                     downloadTask: URLSessionDownloadTask,
                     didWriteData bytesWritten: Int64,
@@ -151,8 +178,17 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
                     totalBytesExpectedToWrite: Int64){
         
      //   print(session);
+        counter += 1;
         
-        print(Float(totalBytesWritten)*100/Float(totalBytesExpectedToWrite));
+        let nazwese = (downloadTask.originalRequest?.url?.absoluteString)!
+        let numberOfFile = urls.index(of: nazwese)!
+        
+        if(counter % 10 == 0 ){
+//            print(Float(totalBytesWritten)*100/Float(totalBytesExpectedToWrite));
+            progress[numberOfFile] = Int(Float(totalBytesWritten)*100/Float(totalBytesExpectedToWrite))
+        }
+        
+        imagesTableView.reloadData()
 //        if(Float(totalBytesWritten)*100/Float(totalBytesExpectedToWrite) > Float(procent) ) {
 //            procent = procent + 1;
 //            print("Progress: ");
@@ -181,15 +217,17 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
 //    }
 
     @IBAction func detectFaceClicked(_ sender: Any) {
-        detectFaces();
+        detectFaces(numberOfFile: 1);
     }
 
-    func detectFaces() {
-        print(imageView.image?.accessibilityIdentifier)
+    func detectFaces(numberOfFile: Int) {
+        print("started face detection of file \(numberOfFile+1)")
+       // print(imageView.image?.accessibilityIdentifier)
         let faceImage = CIImage(image: imageView.image!)
         let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
         let faces = faceDetector?.features(in: faceImage!) as! [CIFaceFeature]
-        print("Number of faces: \(faces.count)")
+        print("Finished face detection of file \(numberOfFile+1). Number of faces: \(faces.count) ")
+//        print("Number of faces: \(faces.count)")
     }
     
     
