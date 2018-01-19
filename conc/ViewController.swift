@@ -7,6 +7,13 @@
 //
 
 import UIKit
+import Foundation
+
+extension Double {
+    func format(f: String) -> String {
+        return String(format: "%\(f)f", self)
+    }
+}
 
 class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloadDelegate {
 
@@ -15,6 +22,8 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
     
     var downloadTask: URLSessionDownloadTask!
     var backgroundSession: URLSession!
+    
+    let someDoubleFormat = ".3"
     
     
     let urls : [String] = [
@@ -64,7 +73,7 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         let cell: UITableViewCell = imagesTableView.dequeueReusableCell(withIdentifier: "imageCell") as UITableViewCell!;
         
         cell.textLabel?.text = names[indexPath.row];
-        cell.detailTextLabel?.text = "\(NSDate().timeIntervalSince(firstDate as Date)) Progress \(progress[indexPath.row]) %";
+        cell.detailTextLabel?.text = "Progress \(progress[indexPath.row]) %";
         return cell
     }
     
@@ -79,8 +88,10 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
             url1 = URL(string: url)!
             if(index == 0) {
              firstDate = NSDate();
+                print("0.000 start download file \(index), URL: "+url);
+            } else {
+                print("\(NSDate().timeIntervalSince(firstDate as Date).format(f: someDoubleFormat)) start download file \(index)");
             }
-            print("\(NSDate().timeIntervalSince(firstDate as Date)) start downloading file \(index)");
             
             downloadTask = backgroundSession.downloadTask(with: url1)
             downloadTask.resume()
@@ -94,7 +105,7 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         
         let urlString = (downloadTask.originalRequest?.url?.absoluteString)!
         let numberOfFile = urls.index(of: urlString)!
-        print("\(NSDate().timeIntervalSince(firstDate as Date)) Finished downloading of file: \(numberOfFile+1)")
+        print("\(NSDate().timeIntervalSince(firstDate as Date).format(f: someDoubleFormat)) Finished download of file: \(numberOfFile+1)")
 
         let fileManager = FileManager()
 
@@ -107,17 +118,17 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         let destinationURLForFile = URL(fileURLWithPath: path)
         
         if fileManager.fileExists(atPath: destinationURLForFile.path){
-            print("\(NSDate().timeIntervalSince(firstDate as Date)) File \(numberOfFile+1) exists in destination url");
+            print("\(NSDate().timeIntervalSince(firstDate as Date).format(f: someDoubleFormat)) File \(numberOfFile+1) exists in destination url");
         }
         else{
             do {
                 try fileManager.moveItem(at: location, to: destinationURLForFile)
                 // file moved
-                print("\(NSDate().timeIntervalSince(firstDate as Date)) Finished moving of file: \(numberOfFile+1)");
+                print("\(NSDate().timeIntervalSince(firstDate as Date).format(f: someDoubleFormat)) Finished moving of file: \(numberOfFile+1) to path: "+destinationURLForFile.path);
                 progress[numberOfFile] = 100;
                 imagesTableView.reloadData()
             }catch{
-                print("\(NSDate().timeIntervalSince(firstDate as Date)) An error occurred while moving file to destination url")
+                print("\(NSDate().timeIntervalSince(firstDate as Date).format(f: someDoubleFormat)) An error occurred while moving file to destination url")
             }
         }
         
@@ -150,7 +161,7 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         
         if(halfFlag[numberOfFile] && progress[numberOfFile] >= 50){
             halfFlag[numberOfFile] = false;
-            print("\(NSDate().timeIntervalSince(firstDate as Date)) 50% downloading of file \(numberOfFile+1)")
+            print("\(NSDate().timeIntervalSince(firstDate as Date).format(f: someDoubleFormat)) 50% download of file \(numberOfFile+1)")
         }
 
         imagesTableView.reloadData()
@@ -158,13 +169,13 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
     
 
     func detectFaces(numberOfFile: Int, uImage: UIImage) {
-        print("\(NSDate().timeIntervalSince(firstDate as Date)) started face detection of file \(numberOfFile+1)")
+        print("\(NSDate().timeIntervalSince(firstDate as Date).format(f: someDoubleFormat)) started face detection of file \(numberOfFile+1)")
        
         let faceImage = CIImage(image: uImage)
         let faceDetector = CIDetector(ofType: CIDetectorTypeFace, context: nil, options: [CIDetectorAccuracy: CIDetectorAccuracyHigh])
         let faces = faceDetector?.features(in: faceImage!) as! [CIFaceFeature]
         
-        print("\(NSDate().timeIntervalSince(firstDate as Date)) Finished face detection of file \(numberOfFile+1). Number of faces: \(faces.count) ")
+        print("\(NSDate().timeIntervalSince(firstDate as Date).format(f: someDoubleFormat)) Finished face detection of file \(numberOfFile+1). Number of faces: \(faces.count) ")
     }
     
 }

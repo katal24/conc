@@ -68,8 +68,8 @@
                             <constraint firstItem="RlF-zD-KyK" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="9" id="2Js-Xt-A9R"/>
                             <constraint firstItem="RlF-zD-KyK" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-17.5" id="51s-2o-Wn7"/>
                             <constraint firstItem="YRo-Gh-BTx" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="34" id="5Gv-BG-hbh"/>
-                            <constraint firstItem="YRo-Gh-BTx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="137" id="Tdt-zR-hlK"/>
                             <constraint firstItem="RlF-zD-KyK" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="142" id="WOc-2h-Dv2"/>
+                            <constraint firstItem="YRo-Gh-BTx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="uJH-Nk-v4N"/>
                             <constraint firstItem="RlF-zD-KyK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="v9F-QV-nme"/>
                         </constraints>
                     </view>
