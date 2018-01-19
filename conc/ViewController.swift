@@ -24,27 +24,27 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
     
     @IBAction func stopDownload(_ sender: Any) {
 //        downloadTask.cancel();
-        downloadTask?.cancel();
+        downloadTask.cancel();
    }
     
-//    let urls : [String] = [
-//    "https://upload.wikimedia.org/wikipedia/commons/0/04/Dyck,_Anthony_van_-_Family_Portrait.jpg",
-//    "https://upload.wikimedia.org/wikipedia/commons/c/ce/Petrus_Christus_-_Portrait_of_a_Young_Woman_-_Google_Art_Project.jpg",
-//    "https://upload.wikimedia.org/wikipedia/commons/3/36/Quentin_Matsys_-_A_Grotesque_old_woman.jpg",
-//    "https://upload.wikimedia.org/wikipedia/commons/c/c8/Valmy_Battle_painting.jpg"
-//    ];
+    let urls : [String] = [
+    "https://upload.wikimedia.org/wikipedia/commons/0/04/Dyck,_Anthony_van_-_Family_Portrait.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/ce/Petrus_Christus_-_Portrait_of_a_Young_Woman_-_Google_Art_Project.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/3/36/Quentin_Matsys_-_A_Grotesque_old_woman.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/c/c8/Valmy_Battle_painting.jpg"
+    ];
     
 //    let urls : [String] = [
 //        "https://upload.wikimedia.org/wikipedia/commons/0/04/Dyck,_Anthony_van_-_Family_Portrait.jpg"
 //    ];
 //    
-    let urls : [String] = [
-        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg",
-        "https://assets1.cdn-mw.com/mw/images/article/art-global-footer-recirc/personage-2338-0c870fcce7dc9a616a70597b63276f4f@1x.jpg",
-        "http://www.therecord.com.au/wp-content/uploads/2012/08/family-photo-2005-10-1024x682.jpg",
-        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg"
-    ]
-    
+//    let urls = [
+//        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg",
+//        "https://assets1.cdn-mw.com/mw/images/article/art-global-footer-recirc/personage-2338-0c870fcce7dc9a616a70597b63276f4f@1x.jpg",
+//        "http://www.therecord.com.au/wp-content/uploads/2012/08/family-photo-2005-10-1024x682.jpg",
+//        "https://images.which-50.com/wp-content/uploads/2017/02/Mark-Grether-Sizmek.jpg"
+//    ]
+//    
     let names : [String] = [
         "Family_Portrait",
         "Google_Art_Project",
@@ -55,6 +55,8 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         var progress : [Int] = [
             0,0,0,0
         ]
+    
+    var halfFlag = [true, true, true, true];
     
 //    let names : [String] = [
 //        "Family_Portrait"
@@ -98,8 +100,8 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
                 var url1:URL;
         for (index, url) in urls.enumerated() {
             url1 = URL(string: url)!
-            downloadTask = backgroundSession.downloadTask(with: url1)
             print("start downloading file \(index)");
+            downloadTask = backgroundSession.downloadTask(with: url1)
 
             downloadTask.resume()
         }
@@ -110,7 +112,13 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
     public func urlSession(_ session: URLSession,
                     downloadTask: URLSessionDownloadTask,
                     didFinishDownloadingTo location: URL){
-        print("urlsession");
+        
+        let nazwese = (downloadTask.originalRequest?.url?.absoluteString)!
+        
+        let numberOfFile = urls.index(of: nazwese)!
+        
+        print("Finished downloading of file: \(numberOfFile+1)")
+        
 //        print(location);
         let path = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
         let documentDirectoryPath:String = path[0]
@@ -127,7 +135,7 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         
         
         if fileManager.fileExists(atPath: destinationURLForFile.path){
-            print("ok - plik juz istnieje");
+            print("Finished moving of file: \(numberOfFile+1)");
             // showFileWithPath(path: destinationURLForFile.path)
         }
         else{
@@ -144,11 +152,7 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
        // let imageView1 = UIImageView(image: imagePath);
         imageView.image = UIImage(contentsOfFile: paths)!
         
-        let nazwese = (downloadTask.originalRequest?.url?.absoluteString)!
-        
-        let numberOfFile = urls.index(of: nazwese)!
-        
-        print("Finished downloading of file: \(numberOfFile+1)")
+
         
         detectFaces(numberOfFile: numberOfFile);
         
@@ -186,6 +190,11 @@ class ViewController: UIViewController, UITableViewDataSource, URLSessionDownloa
         if(counter % 10 == 0 ){
 //            print(Float(totalBytesWritten)*100/Float(totalBytesExpectedToWrite));
             progress[numberOfFile] = Int(Float(totalBytesWritten)*100/Float(totalBytesExpectedToWrite))
+        }
+        
+        if(progress[numberOfFile] >= 50 && halfFlag[numberOfFile] ){
+            halfFlag[numberOfFile] = false;
+            print("50% downloading of file \(numberOfFile+1)")
         }
         
         imagesTableView.reloadData()
